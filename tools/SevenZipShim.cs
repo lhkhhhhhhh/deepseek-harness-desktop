@@ -1,15 +1,15 @@
-# Console shim around the real 7za.exe for packaging on Windows.
-#
-# electron-builder unpacks its winCodeSign tool archive before stamping the icon
-# and version info onto the packaged executable. That archive contains two macOS
-# symlinks, and 7-Zip cannot create them without SeCreateSymbolicLinkPrivilege
-# (developer mode or an elevated shell). 7-Zip then exits with code 2 even though
-# every file Windows packaging needs - rcedit-x64.exe and friends - was written
-# correctly, and electron-builder treats that exit code as fatal.
-#
-# This shim runs the real 7-Zip with "-snl" (store symlinks as plain files) and
-# rewrites exit code 2 to 0 when the extracted payload is present. It is build
-# tooling only: nothing in the shipped application depends on it.
+// Console shim around the real 7za.exe for packaging on Windows.
+//
+// electron-builder unpacks its winCodeSign tool archive before stamping the icon
+// and version info onto the packaged executable. That archive contains two macOS
+// symlinks, and 7-Zip cannot create them without SeCreateSymbolicLinkPrivilege
+// (developer mode or an elevated shell). 7-Zip then exits with code 2 even though
+// every file Windows packaging needs - rcedit-x64.exe and friends - was written
+// correctly, and electron-builder treats that exit code as fatal.
+//
+// This shim runs the real 7-Zip with "-snl" (store symlinks as plain files) and
+// rewrites exit code 2 to 0 when the extracted payload is present. It is build
+// tooling only: nothing in the shipped application depends on it.
 public static class SevenZipShim
 {
     public static int Main(string[] args)

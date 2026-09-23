@@ -66,7 +66,7 @@ Harness 默认拒绝未认证请求：每个进程生成随机启动令牌，`GE
 
 ```powershell
 git clone https://github.com/<you>/dsh-desktop.git
-cd dsh-desktop
+cd dsh-desktop            # 换成你的克隆目录名
 
 npm install                 # electron + electron-builder
 npm run fetch:runtime       # 拉取固定版本的 Harness 运行时（约 200 MB）

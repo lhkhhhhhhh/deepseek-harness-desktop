@@ -16,6 +16,14 @@
     "name": "DeepSeek Harness Desktop contributors"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lhkhhhhhhh/deepseek-harness-desktop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lhkhhhhhhh/deepseek-harness-desktop/issues"
+  },
+  "homepage": "https://github.com/lhkhhhhhhh/deepseek-harness-desktop#readme",
   "main": "src/main/main.js",
   "engines": {
     "node": ">=20"

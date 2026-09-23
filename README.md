@@ -75,7 +75,7 @@ asked to log in again and why the address bar stays a clean `http://127.0.0.1/`.
 
 ```powershell
 git clone https://github.com/<you>/dsh-desktop.git
-cd dsh-desktop
+cd dsh-desktop            # whatever you named the clone
 
 npm install                 # electron + electron-builder
 npm run fetch:runtime       # downloads the pinned Harness runtime (~200 MB)

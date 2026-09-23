@@ -366,7 +366,7 @@ async function restartService() {
     closeSplash();
     await mainWindow
       .loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(
-        '<body style="font:14px/1.6 Segoe UI,sans-serif;padding:32px;color:#333">Restarting DeepSeek Harness鈥?/body>'
+        '<body style="font:14px/1.6 Segoe UI,sans-serif;padding:32px;color:#333">Restarting DeepSeek Harness...</body>'
       )}`)
       .catch(() => undefined);
   }
