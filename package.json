@@ -1,7 +1,7 @@
 {
   "name": "dsh-desktop",
   "productName": "DeepSeek Harness",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Unofficial Windows desktop client for DeepSeek Harness: launches the local Harness service and shows the Harness GUI in its own application window.",
   "keywords": [
@@ -37,6 +37,7 @@
     "dev": "electron . --dsh-dev",
     "doctor": "node tools/doctor.js",
     "smoke": "node tools/smoke-launch.js",
+    "test:recovery": "node tools/test-orphan-recovery.js",
     "fetch:runtime": "node tools/fetch-runtime.js",
     "prepack:assets": "node tools/verify-assets.js",
     "dist": "npm run prepack:assets && electron-builder --win --x64",

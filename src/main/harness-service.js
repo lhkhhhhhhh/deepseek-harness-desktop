@@ -47,6 +47,8 @@ class HarnessService extends EventEmitter {
     this.port = null;
     this.state = 'idle';
     this.stopping = false;
+    /** Optional ServiceRegistry; when present the pid is recorded for crash recovery. */
+    this.registry = options.registry ?? null;
   }
 
   /** The last `count` log lines, oldest first. */
@@ -116,6 +118,7 @@ class HarnessService extends EventEmitter {
     this.child = child;
     this.state = 'starting';
     this.emit('state', this.state);
+    this.registry?.record(child.pid);
 
     child.stdout.setEncoding('utf8');
     child.stderr.setEncoding('utf8');
@@ -130,6 +133,7 @@ class HarnessService extends EventEmitter {
       child.once('exit', (code, signal) => {
         this.state = 'exited';
         this.emit('state', this.state);
+        this.registry?.clear(child.pid);
         if (this.stopping) return;
         reject(new Error(`the Harness service exited during startup (code ${String(code)}, signal ${String(signal)})\n${this.tail(20)}`));
       });
@@ -211,6 +215,7 @@ class HarnessService extends EventEmitter {
         /* nothing else to try */
       }
     }
+    this.registry?.clear(child.pid);
     this.child = null;
   }
 }

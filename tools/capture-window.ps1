@@ -18,6 +18,7 @@ using System;
 using System.Runtime.InteropServices;
 public static class WinShot {
   [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
+  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
   [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
   [StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left, Top, Right, Bottom; }
@@ -44,6 +45,13 @@ Write-Output ("window: pid={0} title='{1}'" -f $proc.Id, $proc.MainWindowTitle)
 Start-Sleep -Milliseconds 300
 [void][WinShot]::SetForegroundWindow($proc.MainWindowHandle)
 Start-Sleep -Seconds 4
+
+# Never capture a different application: something may sit on top of the target.
+$foreground = [WinShot]::GetForegroundWindow()
+if ($foreground -ne $proc.MainWindowHandle) {
+  Write-Output 'NOT_FOREGROUND: another window is on top; refused to capture'
+  exit 2
+}
 
 $rect = New-Object WinShot+RECT
 [void][WinShot]::GetWindowRect($proc.MainWindowHandle, [ref]$rect)

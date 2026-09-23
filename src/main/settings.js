@@ -42,7 +42,9 @@ class Store {
 
   load() {
     try {
-      const raw = fs.readFileSync(this.file, 'utf8');
+      // Strip a UTF-8 BOM: editors such as Notepad prepend one, and JSON.parse
+      // would reject the whole file, silently dropping the user's settings.
+      const raw = fs.readFileSync(this.file, 'utf8').replace(/^\uFEFF/u, '');
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object') this.data = { ...DEFAULTS, ...parsed };
     } catch {

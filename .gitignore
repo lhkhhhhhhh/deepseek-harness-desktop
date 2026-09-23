@@ -16,6 +16,9 @@ shot-*.png
 .env.local
 *.local.json
 
+# Scratch directory used by tools/test-orphan-recovery.js
+.test-orphan/
+
 # Editor / OS noise
 .vscode/
 .idea/

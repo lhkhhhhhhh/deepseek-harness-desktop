@@ -25,6 +25,7 @@ const { HarnessService } = require('./harness-service');
 const { buildMenu } = require('./menu');
 const { workspacePrefs } = require('./workspace-prefs');
 const { iconPath, packaged } = require('./resources');
+const { ServiceRegistry, cleanStale } = require('./service-registry');
 
 app.setAppUserModelId('ai.deepseek.harness.desktop');
 app.setName('DeepSeek Harness');
@@ -40,8 +41,13 @@ const ICON = iconPath();
 
 // Pin the user-data directory before anything reads or writes settings: the
 // default is derived from the application name, and Electron must know the name
-// before the first app.getPath('userData') call.
-const APP_DATA_DIR = path.join(process.env.APPDATA || app.getPath('appData'), 'DeepSeek Harness');
+// before the first app.getPath('userData') call. DSH_DESKTOP_SETTINGS_DIR moves
+// both the settings and the Electron profile, which is what lets a development
+// checkout run side by side with an installed copy.
+const APP_DATA_DIR =
+  process.env.DSH_DESKTOP_SETTINGS_DIR && process.env.DSH_DESKTOP_SETTINGS_DIR.trim() !== ''
+    ? path.resolve(process.env.DSH_DESKTOP_SETTINGS_DIR)
+    : path.join(process.env.APPDATA || app.getPath('appData'), 'DeepSeek Harness');
 app.setPath('userData', APP_DATA_DIR);
 
 /** @type {HarnessService|null} */
@@ -54,6 +60,9 @@ let quitting = false;
 let lastUrl = null;
 let lastAuthUrl = null;
 let booting = false;
+
+/** Records the service pid so a crashed run can be cleaned up on the next start. */
+const serviceRegistry = new ServiceRegistry(path.join(APP_DATA_DIR, 'service.pid'));
 
 const logFile = () => path.join(APP_DATA_DIR, 'desktop.log');
 
@@ -279,7 +288,8 @@ function ensureService() {
     launcher: runtime.launcher,
     dshHome,
     workspace: null,
-    port: Number(store.get('port')) || 0
+    port: Number(store.get('port')) || 0,
+    registry: serviceRegistry
   });
   service.runtime = runtime;
 
@@ -310,6 +320,14 @@ async function boot() {
     if (workspace === null) {
       app.quit();
       return;
+    }
+
+    // A previous run that was killed without its quit handler leaves the service
+    // alive. Remove it before starting one, so the user's DSH_HOME has a single
+    // owner and nothing is left running in the background.
+    const stale = cleanStale(serviceRegistry);
+    if (stale !== null) {
+      log(`removed a Harness service left behind by a previous run (pid ${String(stale.pid)})`);
     }
 
     const setupError = ensureService();
