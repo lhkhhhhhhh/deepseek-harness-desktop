@@ -44,6 +44,16 @@ function bundledRuntime() {
   return isRuntime(root) ? root : null;
 }
 
+/**
+ * The runtime `npm run fetch:runtime` installs next to the sources. This is what
+ * an unpackaged run (development, CI, `npm start`) uses; without it those runs
+ * would silently depend on a machine-specific npx cache.
+ */
+function checkedOutRuntime() {
+  const root = path.resolve(__dirname, '..', '..', 'runtime', 'dsh-runtime', 'node_modules');
+  return isRuntime(root) ? root : null;
+}
+
 /** An existing npx-installed runtime in the user's npm cache. */
 function npxRuntime() {
   const localAppData = process.env.LOCALAPPDATA;
@@ -80,6 +90,7 @@ function resolveRuntime() {
   const candidates = [
     { root: process.env.DSH_DESKTOP_RUNTIME, origin: 'DSH_DESKTOP_RUNTIME' },
     { root: bundledRuntime(), origin: 'bundled' },
+    { root: checkedOutRuntime(), origin: 'fetched' },
     { root: npxRuntime(), origin: 'npx-cache' }
   ];
   for (const candidate of candidates) {
