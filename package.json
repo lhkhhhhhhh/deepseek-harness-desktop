@@ -1,0 +1,127 @@
+{
+  "name": "dsh-desktop",
+  "productName": "DeepSeek Harness",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Unofficial Windows desktop client for DeepSeek Harness: launches the local Harness service and shows the Harness GUI in its own application window.",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "desktop",
+    "electron",
+    "windows"
+  ],
+  "author": {
+    "name": "DeepSeek Harness Desktop contributors"
+  },
+  "license": "MIT",
+  "main": "src/main/main.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "dshRuntime": {
+    "version": "0.1.5-rc.2"
+  },
+  "scripts": {
+    "postinstall": "node tools/postinstall.js",
+    "start": "electron .",
+    "dev": "electron . --dsh-dev",
+    "doctor": "node tools/doctor.js",
+    "smoke": "node tools/smoke-launch.js",
+    "fetch:runtime": "node tools/fetch-runtime.js",
+    "prepack:assets": "node tools/verify-assets.js",
+    "dist": "npm run prepack:assets && electron-builder --win --x64",
+    "dist:portable": "npm run prepack:assets && electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "ai.deepseek.harness.desktop",
+    "productName": "DeepSeek Harness",
+    "copyright": "Copyright (c) DeepSeek Harness Desktop contributors",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "!**/*.map",
+      "!**/*.md",
+      "!**/*.ts",
+      "!**/*.tsbuildinfo"
+    ],
+    "extraResources": [
+      {
+        "from": "build/icon.ico",
+        "to": "dsh-desktop/icon.ico"
+      },
+      {
+        "from": "runtime/dsh-runtime",
+        "to": "dsh-runtime",
+        "filter": [
+          "**/*",
+          "!**/*.md",
+          "!**/*.map",
+          "!**/*.d.ts",
+          "!**/*.ts",
+          "!**/test/**",
+          "!**/tests/**",
+          "!**/__tests__/**",
+          "!**/*.test.js",
+          "!**/*.spec.js",
+          "!**/docs/**",
+          "!**/example/**",
+          "!**/examples/**",
+          "!**/.github/**",
+          "!**/.vscode/**",
+          "!**/*.tsbuildinfo",
+          "!**/node-gyp/**",
+          "!**/*.o",
+          "!**/*.obj",
+          "!**/*.lib",
+          "!**/*.pdb",
+          "!**/*.exp",
+          "!**/*.iobj",
+          "!**/*.ipdb"
+        ]
+      }
+    ],
+    "compression": "maximum",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "DeepSeek-Harness-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "DeepSeek-Harness-Portable-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "DeepSeek Harness",
+      "uninstallDisplayName": "DeepSeek Harness",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    }
+  }
+}

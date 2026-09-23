@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+runtime/
+!runtime/.gitkeep
+
+# Build output
+release/
+dist/
+
+# Verification screenshots produced by tools/capture-window.ps1
+shot-*.png
+*.shot.png
+
+# Local environment
+.env
+.env.local
+*.local.json
+
+# Editor / OS noise
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Logs
+*.log
+npm-debug.log*

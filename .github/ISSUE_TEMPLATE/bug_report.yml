@@ -1,0 +1,57 @@
+name: Bug report
+description: 报告桌面客户端的问题（启动失败、窗口异常、打包问题……）
+title: '[Bug] '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请尽量填完整，尤其是 `npm run doctor` 的输出 —— 它能一次性说明
+        Node、运行时、DSH_HOME 和工作目录的解析结果。
+
+        提交前请删除日志里的个人信息（用户名、绝对路径里的真实姓名等）。
+
+  - type: dropdown
+    id: how
+    attributes:
+      label: 你是怎么运行它的？
+      options:
+        - 安装包版本（Setup exe）
+        - 免安装版（Portable exe）
+        - 从源码运行（npm start）
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: 版本信息
+      description: 应用版本（或 git commit）、Windows 版本、`node -v`
+      placeholder: 'app 0.1.1 / Windows 11 23H2 / node v24.16.0'
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: 发生了什么
+      description: 现象、期望结果、复现步骤
+    validations:
+      required: true
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: npm run doctor 的输出
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: log
+    attributes:
+      label: 日志（Service → Open log file）
+      description: 只贴相关片段即可；记得先删掉个人信息
+      render: text
+    validations:
+      required: false

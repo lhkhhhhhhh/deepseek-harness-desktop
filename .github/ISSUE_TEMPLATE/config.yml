@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: DeepSeek Harness 本体问题
+    url: https://github.com/deepseek-ai/deepseek-harness
+    about: Agent 能力、工具、插件、会话、模型设置等问题请提到上游仓库。
+  - name: 使用与排障文档
+    url: https://github.com/deepseek-ai/deepseek-harness
+    about: 先看 README 的「常见问题」一节，多数启动问题在那里有说明。
